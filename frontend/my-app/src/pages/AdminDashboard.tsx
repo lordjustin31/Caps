@@ -43,6 +43,7 @@ const AdminDashboard: React.FC = () => {
     saleRentCount: 0,
     pendingVerificationsCount: 0,
     serviceFeeCount: 0,
+    maintenanceRequestsCount: 0,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -73,11 +74,13 @@ const AdminDashboard: React.FC = () => {
           housesRes,
           pendingVerificationsRes,
           serviceFeeRes,
+          maintenanceRequestsRes,
         ] = await Promise.all([
           fetch(`${API_URL}/admin/visitors/`, { headers: authHeaders }).catch(() => null),
           fetch(`${API_URL}/houses/`, { headers: authHeaders }).catch(() => null),
           fetch(`${API_URL}/admin/pending-verifications/`, { headers: authHeaders }).catch(() => null),
           fetch(`${API_URL}/service-fees/`, { headers: authHeaders }).catch(() => null),
+          fetch(`${API_URL}/maintenance-requests/`, { headers: authHeaders }).catch(() => null),
         ]);
 
         // Extract counts from responses - helper function to safely get JSON
@@ -94,6 +97,7 @@ const AdminDashboard: React.FC = () => {
         const housesData = await getJsonData(housesRes);
         const pendingVerificationsData = await getJsonData(pendingVerificationsRes);
         const serviceFeeData = await getJsonData(serviceFeeRes);
+        const maintenanceRequestsData = await getJsonData(maintenanceRequestsRes);
 
         // Handle paginated responses or arrays
         const getCount = (data: any) => {
@@ -108,6 +112,7 @@ const AdminDashboard: React.FC = () => {
           saleRentCount: getCount(housesData),
           pendingVerificationsCount: getCount(pendingVerificationsData),
           serviceFeeCount: getCount(serviceFeeData),
+          maintenanceRequestsCount: getCount(maintenanceRequestsData),
         });
       } catch (err: any) {
         setError(err.message || 'Unknown error');
@@ -227,6 +232,16 @@ const AdminDashboard: React.FC = () => {
       <div className="card-text">
         <h3>Service Fee</h3>
         <p>{additionalStats.serviceFeeCount}</p>
+      </div>
+    </div>
+  </Link>
+
+  <Link to="/admin-maintenance-requests" className="card" style={{ textDecoration: 'none', color: 'inherit' }}>
+    <div className="card-content">
+      <img src={pendingIcon} alt="Maintenance Requests" />
+      <div className="card-text">
+        <h3>Maintenance Requests</h3>
+        <p>{additionalStats.maintenanceRequestsCount}</p>
       </div>
     </div>
   </Link>

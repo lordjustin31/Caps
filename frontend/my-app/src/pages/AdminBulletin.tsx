@@ -66,6 +66,7 @@ interface Post {
   id: number;
   title: string;
   body: string;
+  image?: string | null;
   lat?: number | null;
   lng?: number | null;
 }
@@ -172,7 +173,7 @@ interface VisitorRequestItem {
   updated_at: string;
 }
 
-type TabType = 'announcements' | 'news-alerts' | 'blog-stories' | 'houses' | 'bookings' | 'pins' | 'media-gallery';
+type TabType = 'announcements' | 'blog-stories' | 'houses' | 'bookings' | 'pins' | 'media-gallery';
 
 const AdminBulletin: React.FC = () => {
   const navigate = useNavigate();
@@ -215,6 +216,9 @@ const AdminBulletin: React.FC = () => {
     title: '',
     body: ''
   });
+  const [postImageFile, setPostImageFile] = useState<File | null>(null);
+  const [postImagePreview, setPostImagePreview] = useState<string | null>(null);
+  const postImageInputRef = useRef<HTMLInputElement>(null);
 
   // Houses states
   const [houses, setHouses] = useState<House[]>([]);
@@ -918,6 +922,19 @@ const AdminBulletin: React.FC = () => {
   };
 
   // Blog Posts handlers
+  const handlePostImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setPostImageFile(file);
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPostImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handlePostSave = async () => {
     if (!postFormData.title.trim() || !postFormData.body.trim()) {
       toast.error('Please fill in both title and body.');
@@ -934,26 +951,62 @@ const AdminBulletin: React.FC = () => {
         toast.info('Post editing requires backend support. Please create a new post instead.');
         return;
       }
-      await axios.post(`${API_URL}/posts/`, {
+      
+      // Use FormData if image exists, otherwise use JSON
+      const formData = new FormData();
+      formData.append('title', postFormData.title);
+      formData.append('body', postFormData.body);
+      if (postFormData.lat) formData.append('lat', postFormData.lat.toString());
+      if (postFormData.lng) formData.append('lng', postFormData.lng.toString());
+      if (postImageFile) {
+        formData.append('image', postImageFile);
+      }
+
+      const headers: any = { Authorization: `Bearer ${token}` };
+      if (!postImageFile) {
+        headers['Content-Type'] = 'application/json';
+      }
+
+      await axios.post(`${API_URL}/posts/`, postImageFile ? formData : {
         title: postFormData.title,
         body: postFormData.body,
         lat: postFormData.lat,
         lng: postFormData.lng
       }, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers
       });
       toast.success('Post created successfully!');
       await fetchPosts();
       setShowPostForm(false);
       setPostEditingId(null);
       setPostFormData({ id: 0, title: '', body: '' });
+      setPostImageFile(null);
+      setPostImagePreview(null);
+      if (postImageInputRef.current) {
+        postImageInputRef.current.value = '';
+      }
     } catch (err: any) {
       toast.error(err.response?.data?.detail || 'Failed to save post.');
     }
   };
 
   const handlePostDelete = async (id: number) => {
-    toast.info('Post deletion requires backend support. Please contact the administrator.');
+    if (!window.confirm('Are you sure you want to delete this post?')) return;
+    try {
+      const token = getToken();
+      if (!token) {
+        toast.error('You must be logged in to delete posts.');
+        return;
+      }
+      await axios.delete(`${API_URL}/posts/${id}/`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success('Post deleted successfully!');
+      await fetchPosts();
+    } catch (err: any) {
+      console.error('Error deleting post:', err);
+      toast.error(err.response?.data?.detail || 'Failed to delete post.');
+    }
   };
 
   // Houses handlers
@@ -1254,8 +1307,6 @@ const AdminBulletin: React.FC = () => {
     switch (activeTab) {
       case 'announcements':
         return renderAnnouncementsTab();
-      case 'news-alerts':
-        return renderNewsAlertsTab();
       case 'blog-stories':
         return renderBlogStoriesTab();
       case 'houses':
@@ -1446,101 +1497,21 @@ const AdminBulletin: React.FC = () => {
     );
   };
 
-  const renderNewsAlertsTab = () => {
-    const allItems = [
-      ...newsItems.map(n => ({ ...n, type: 'news' as const })),
-      ...alertItems.map(a => ({ ...a, type: 'alert' as const }))
-    ].filter(item => newsAlertFilter === 'all' || item.type === newsAlertFilter);
-
-    return (
-      <div className="bulletin-container">
-        <div className="bulletin-controls">
-          <div className="bulletin-filters">
-            <button className={`bulletin-filter-btn ${newsAlertFilter === 'all' ? 'active' : ''}`} onClick={() => setNewsAlertFilter('all')}>All</button>
-            <button className={`bulletin-filter-btn ${newsAlertFilter === 'news' ? 'active' : ''}`} onClick={() => setNewsAlertFilter('news')}>News</button>
-            <button className={`bulletin-filter-btn ${newsAlertFilter === 'alert' ? 'active' : ''}`} onClick={() => setNewsAlertFilter('alert')}>Alerts</button>
-          </div>
-          <button onClick={() => setShowNewsAlertModal(true)} className="bulletin-add-btn">
-            <AddIcon /> Add New
-          </button>
-        </div>
-
-        {showNewsAlertModal && (
-          <div className="bulletin-form-card">
-            <h2 className="bulletin-form-title">Create {newsAlertForm.kind === 'news' ? 'News' : 'Alert'}</h2>
-            <form onSubmit={handleNewsAlertSubmit} className="bulletin-form-content">
-              <div className="bulletin-form-group">
-                <label className="bulletin-form-label">Type</label>
-                <select value={newsAlertForm.kind} onChange={(e) => setNewsAlertForm({ ...newsAlertForm, kind: e.target.value as 'news' | 'alert' })} className="bulletin-form-input">
-                  <option value="news">News</option>
-                  <option value="alert">Alert</option>
-                </select>
-              </div>
-              <div className="bulletin-form-group">
-                <label className="bulletin-form-label">Title <span className="required">*</span></label>
-                <input type="text" value={newsAlertForm.title} onChange={(e) => setNewsAlertForm({ ...newsAlertForm, title: e.target.value })} className="bulletin-form-input" required />
-              </div>
-              <div className="bulletin-form-group">
-                <label className="bulletin-form-label">Content <span className="required">*</span></label>
-                <textarea value={newsAlertForm.body} onChange={(e) => setNewsAlertForm({ ...newsAlertForm, body: e.target.value })} rows={10} className="bulletin-form-textarea" required />
-              </div>
-              {newsAlertForm.kind === 'alert' && (
-                <div className="bulletin-form-group">
-                  <label className="bulletin-form-checkbox">
-                    <input type="checkbox" checked={newsAlertForm.urgent} onChange={(e) => setNewsAlertForm({ ...newsAlertForm, urgent: e.target.checked })} className="bulletin-checkbox" />
-                    <span className="bulletin-checkbox-label">Urgent/Critical</span>
-                  </label>
-                </div>
-              )}
-              <div className="bulletin-form-actions">
-                <button type="button" onClick={() => { setShowNewsAlertModal(false); setNewsAlertForm({ kind: 'news', title: '', body: '', urgent: false }); }} className="bulletin-btn-secondary">
-                  <CancelIcon /> Cancel
-                </button>
-                <button type="submit" className="bulletin-btn-primary">
-                  <SaveIcon /> Create
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
-
-        <div className="bulletin-list">
-          {allItems.length === 0 ? (
-            <div className="bulletin-empty">
-              <p className="bulletin-empty-text">No {newsAlertFilter === 'all' ? 'items' : newsAlertFilter} found.</p>
-            </div>
-          ) : (
-            allItems.map((item) => (
-              <div key={`${item.type}-${item.id}`} className="bulletin-card">
-                <div className="bulletin-card-header">
-                  <div className="bulletin-card-title-section">
-                    <h3 className="bulletin-card-title">{item.type === 'news' ? '📰' : '🚨'} {item.type === 'news' ? item.title : item.title}</h3>
-                    <div className="bulletin-card-badges">
-                      <span className="bulletin-badge published-badge">{item.type === 'news' ? 'News' : 'Alert'}</span>
-                    </div>
-                  </div>
-                  <div className="bulletin-card-actions">
-                    <button onClick={() => handleNewsAlertDelete(item.id, item.type)} className="bulletin-action-btn delete">
-                      <DeleteIcon />
-                    </button>
-                  </div>
-                </div>
-                <div className="bulletin-card-content">
-                  <p className="bulletin-card-text">{item.type === 'news' ? item.content : item.message}</p>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-    );
-  };
 
   const renderBlogStoriesTab = () => {
     return (
       <div className="bulletin-container">
         <div className="bulletin-controls">
-          <button onClick={() => { setShowPostForm(true); setPostEditingId(null); setPostFormData({ id: 0, title: '', body: '' }); }} className="bulletin-add-btn">
+          <button onClick={() => { 
+            setShowPostForm(true); 
+            setPostEditingId(null); 
+            setPostFormData({ id: 0, title: '', body: '' }); 
+            setPostImageFile(null);
+            setPostImagePreview(null);
+            if (postImageInputRef.current) {
+              postImageInputRef.current.value = '';
+            }
+          }} className="bulletin-add-btn">
             <AddIcon /> Add New Post
           </button>
         </div>
@@ -1557,8 +1528,111 @@ const AdminBulletin: React.FC = () => {
                 <label className="bulletin-form-label">Body <span className="required">*</span></label>
                 <textarea value={postFormData.body} onChange={(e) => setPostFormData({ ...postFormData, body: e.target.value })} rows={10} className="bulletin-form-textarea" />
               </div>
+              <div className="bulletin-form-group">
+                <label className="bulletin-form-label">Blog Image</label>
+                
+                {/* Hidden file input */}
+                <input
+                  ref={postImageInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePostImageChange}
+                  style={{ display: 'none' }}
+                />
+                
+                {/* Custom upload button */}
+                <button
+                  type="button"
+                  onClick={() => postImageInputRef.current?.click()}
+                  style={{
+                    width: '100%',
+                    padding: '12px 20px',
+                    backgroundColor: postImageFile ? '#28a745' : '#2e6F40',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    transition: 'background-color 0.3s ease',
+                    marginBottom: '10px'
+                  }}
+                  onMouseOver={(e) => {
+                    if (!postImageFile) {
+                      e.currentTarget.style.backgroundColor = '#24572b';
+                    }
+                  }}
+                  onMouseOut={(e) => {
+                    if (!postImageFile) {
+                      e.currentTarget.style.backgroundColor = '#2e6F40';
+                    }
+                  }}
+                >
+                  {postImageFile ? (
+                    <>📁 Image Selected: {postImageFile.name} - Click to Change</>
+                  ) : (
+                    <>📤 Choose Image to Upload</>
+                  )}
+                </button>
+                
+                {/* Show selected file name */}
+                {postImageFile && (
+                  <div style={{ 
+                    marginBottom: '10px', 
+                    padding: '8px', 
+                    backgroundColor: '#f0f0f0', 
+                    borderRadius: '4px',
+                    fontSize: '13px',
+                    color: '#333'
+                  }}>
+                    <strong>Selected:</strong> {postImageFile.name} 
+                    ({Math.round(postImageFile.size / 1024)} KB)
+                  </div>
+                )}
+                
+                {/* Preview */}
+                {postImagePreview && (
+                  <div style={{ marginTop: '15px' }}>
+                    <img src={postImagePreview} alt="Preview" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '8px', border: '2px solid #ddd' }} />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPostImageFile(null);
+                        setPostImagePreview(null);
+                        if (postImageInputRef.current) {
+                          postImageInputRef.current.value = '';
+                        }
+                      }}
+                      style={{
+                        marginTop: '10px',
+                        padding: '8px 16px',
+                        backgroundColor: '#dc3545',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '13px'
+                      }}
+                    >
+                      Remove Image
+                    </button>
+                  </div>
+                )}
+              </div>
               <div className="bulletin-form-actions">
-                <button onClick={() => { setShowPostForm(false); setPostEditingId(null); }} className="bulletin-btn-secondary">
+                <button onClick={() => { 
+                  setShowPostForm(false); 
+                  setPostEditingId(null);
+                  setPostImageFile(null);
+                  setPostImagePreview(null);
+                  if (postImageInputRef.current) {
+                    postImageInputRef.current.value = '';
+                  }
+                }} className="bulletin-btn-secondary">
                   <CancelIcon /> Cancel
                 </button>
                 <button onClick={handlePostSave} className="bulletin-btn-primary">
@@ -2372,27 +2446,6 @@ const AdminBulletin: React.FC = () => {
                   </div>
                 )}
 
-                {req.pdf_url && (
-                  <div style={{ marginTop: '10px' }}>
-                    <a
-                      href={req.pdf_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        padding: '8px 16px',
-                        backgroundColor: '#2196F3',
-                        color: 'white',
-                        textDecoration: 'none',
-                        borderRadius: '6px',
-                        fontSize: '14px',
-                        display: 'inline-block'
-                      }}
-                    >
-                      📄 Download PDF
-                    </a>
-                  </div>
-                )}
-
                 <div style={{ fontSize: '12px', color: '#999', marginTop: '10px' }}>
                   Created: {new Date(req.created_at).toLocaleString()}
                 </div>
@@ -2422,7 +2475,7 @@ const AdminBulletin: React.FC = () => {
           {/* Tab Navigation */}
           <div style={{ background: 'white', borderBottom: '2px solid #e0e0e0', margin: '0 -20px 30px -20px', padding: '0 20px' }}>
             <div style={{ display: 'flex', gap: '10px', overflowX: 'auto' }}>
-              {(['announcements', 'news-alerts', 'blog-stories', 'houses', 'bookings', 'pins', 'media-gallery'] as TabType[]).map((tab) => (
+              {(['announcements', 'blog-stories', 'houses', 'bookings', 'pins', 'media-gallery'] as TabType[]).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}

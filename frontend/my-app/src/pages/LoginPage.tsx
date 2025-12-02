@@ -347,19 +347,48 @@ const LoginPage: React.FC<LoginPageProps> = () => {
         }));
         setBlogStories(convertedBlogs);
 
-        // Create media items from houses with images (only real data, no dummy data)
-        const media: MediaItem[] = housesData
-          .filter((house: any) => house.image)
-          .map((house: any, index: number) => ({
-            id: house.id || index,
-            title: house.title || `House ${house.id}`,
-            description: house.description || house.location || 'Beautiful home in Happy Homes community',
-            imageUrl: house.image.startsWith('http') ? house.image : `http://127.0.0.1:8000${house.image}`,
-            type: 'image' as const,
-            date: house.created_at || new Date().toISOString(),
+        // Fetch community media from API (same as HomePage and AdminBulletin)
+        let communityMediaData: any[] = [];
+        try {
+          const mediaRes = await fetch('http://127.0.0.1:8000/api/community-media/?is_public=true');
+          if (mediaRes.ok) {
+            communityMediaData = await mediaRes.json();
+          }
+        } catch (err) {
+          console.warn('Could not fetch community media (backend may not be running)');
+        }
+
+        // Convert API media to MediaItem format (same as HomePage and AdminBulletin)
+        const apiMedia: MediaItem[] = communityMediaData
+          .filter((item: any) => item.is_approved && item.is_public)
+          .map((item: any) => ({
+            id: item.id,
+            title: item.title,
+            description: item.description || '',
+            imageUrl: item.media_url 
+              ? (item.media_url.startsWith('http') ? item.media_url : `http://127.0.0.1:8000${item.media_url}`)
+              : '',
+            type: item.media_type as 'image' | 'video',
+            date: item.created_at || new Date().toISOString(),
           }));
 
-        setMediaItems(media);
+        // Fallback: Use house images if no community media available
+        if (apiMedia.length === 0) {
+          const houseMedia: MediaItem[] = housesData
+            .filter((house: any) => house.image)
+            .map((house: any, index: number) => ({
+              id: house.id || index,
+              title: house.title || `House ${house.id}`,
+              description: house.description || house.location || 'Beautiful home in Happy Homes community',
+              imageUrl: house.image.startsWith('http') ? house.image : `http://127.0.0.1:8000${house.image}`,
+              type: 'image' as const,
+              date: house.created_at || new Date().toISOString(),
+            }));
+          setMediaItems(houseMedia);
+        } else {
+          // Use API media (limit to 30 items like HomePage)
+          setMediaItems(apiMedia.slice(0, 30));
+        }
       } catch (err: any) {
         // Only log if it's not a network error (backend not running)
         if (err?.message && !err.message.includes('Failed to fetch') && !err.message.includes('NetworkError')) {
@@ -659,6 +688,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
           justifyContent: 'center',
           alignItems: 'center',
           padding: '20px',
+          paddingTop: '100px',
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -882,6 +912,20 @@ const LoginPage: React.FC<LoginPageProps> = () => {
               </div>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Find Your Dream Home Advertisement */}
+      <div className="dream-home-advertisement">
+        <div className="dream-home-content">
+          <h2 className="dream-home-title">Find Your Dream Home Today?</h2>
+          <p className="dream-home-subtitle">Browse our exclusive listings and discover your perfect home in the community</p>
+          <button 
+            className="dream-home-btn"
+            onClick={() => navigate('/register')}
+          >
+            Get Started
+          </button>
         </div>
       </div>
 
@@ -1145,17 +1189,12 @@ const LoginPage: React.FC<LoginPageProps> = () => {
         </div>
         
         {/* Community Gallery */}
-        <div className="section-container media-gallery-container" style={{ marginTop: '40px' }}>
+        <div className="section-container media-gallery-container">
           <div className="section-header">
             <p className="section-label">Community Gallery</p>
             <h2 className="section-title">Pictures & Videos</h2>
           </div>
-          {loading ? (
-            <div className="loading-spinner">
-              <div className="spinner"></div>
-              <p>Loading gallery...</p>
-            </div>
-          ) : mediaItems.length > 0 ? (
+          {mediaItems.length > 0 ? (
             <>
               {/* Navigation Buttons */}
               <div className="gallery-navigation">
@@ -1271,15 +1310,28 @@ const LoginPage: React.FC<LoginPageProps> = () => {
             </>
           ) : (
             <div className="empty-state">
-              <div className="empty-icon">🖼️</div>
               <p>No media available at the moment.</p>
             </div>
           )}
         </div>
       </div>
 
+      {/* Join Happy Homes Community Advertisement */}
+      <div className="join-community-advertisement">
+        <div className="join-community-content">
+          <h2 className="join-community-title">Join Happy Homes Community</h2>
+          <p className="join-community-subtitle">Create an account to list your property, book amenities, and connect with neighbors</p>
+          <button 
+            className="join-community-btn"
+            onClick={() => navigate('/register')}
+          >
+            Sign Up Free
+          </button>
+        </div>
+      </div>
+
       {/* Our Main Focus Section */}
-<div
+      <div
         className="section-container"
   style={{
           marginTop: '0',
@@ -1675,6 +1727,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
 
 
       {showForgotPassword && <ForgotPassword onClose={() => setShowForgotPassword(false)} />}
+
       <Footer />
     </>
   );

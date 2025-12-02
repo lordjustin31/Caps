@@ -11,9 +11,13 @@ body {
 /* Bulletin Board Container - Ultra Premium Design */
 .bulletin-board-container {
   padding: 100px 40px;
-
+  background: rgba(26, 26, 26, 0.4);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .bulletin-board-container::before {
@@ -137,10 +141,10 @@ body {
 .bulletin-section-title {
   font-size: clamp(0.95rem, 2.5vw, 1.15rem);
   font-weight: 700;
-  color: #0f172a;
+  color: #ffffff;
   margin-bottom: 36px;
   padding-bottom: 18px;
-  border-bottom: 2px solid rgba(226, 232, 240, 0.6);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   gap: 16px;
@@ -1178,12 +1182,20 @@ footer {
 /* --- Advertisement Banners --- */
 .advertisement-banner {
   background: #2e6F40;
-  border-radius: 12px;
+  border-radius: 0;
   padding: 30px 40px;
   margin-bottom: 30px;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 16px rgba(76, 175, 80, 0.2);
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  position: relative;
+  left: 50%;
+  right: 50%;
+  transform: translateX(-50%);
 }
 
 .advertisement-banner:hover {
@@ -1205,6 +1217,8 @@ footer {
   align-items: center;
   justify-content: space-between;
   gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .ad-text {
@@ -1803,6 +1817,135 @@ footer {
 /* Enhanced Blogs & Stories Container */
 .blogs-stories-container {
   background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+/* Maintenance Advertisement Banner */
+.maintenance-ad-banner {
+  background: linear-gradient(135deg, #2e6F40 0%, #17824f 100%);
+  padding: 40px 20px;
+  margin: 40px 0;
+  width: 100vw;
+  max-width: 100%;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  border-radius: 0;
+  box-shadow: 0 8px 24px rgba(46, 111, 64, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.maintenance-ad-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.maintenance-ad-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  position: relative;
+  z-index: 1;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.maintenance-ad-icon {
+  font-size: 64px;
+  line-height: 1;
+  flex-shrink: 0;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.maintenance-ad-text {
+  flex: 1;
+  min-width: 250px;
+  color: white;
+}
+
+.maintenance-ad-text h3 {
+  margin: 0 0 10px 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: white;
+}
+
+.maintenance-ad-text p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.maintenance-ad-button {
+  background: white;
+  color: #2e6F40;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.maintenance-ad-button:hover {
+  background: #f5f5f5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.maintenance-ad-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design for Maintenance Ad */
+@media (max-width: 768px) {
+  .maintenance-ad-banner {
+    padding: 30px 20px;
+    margin: 30px 20px;
+  }
+
+  .maintenance-ad-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .maintenance-ad-icon {
+    font-size: 48px;
+  }
+
+  .maintenance-ad-text h3 {
+    font-size: 24px;
+  }
+
+  .maintenance-ad-text p {
+    font-size: 14px;
+  }
+
+  .maintenance-ad-button {
+    width: 100%;
+    padding: 12px 24px;
+  }
 }
 
 .section-header {
@@ -2541,9 +2684,10 @@ footer {
 
 .media-card-horizontal {
   background: white;
-  border-radius: 12px;
+  border-radius: 0;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   opacity: 0;
@@ -2558,7 +2702,8 @@ footer {
 
 .media-card-horizontal:hover {
   transform: scale(1.05) translateY(-5px);
-  box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 12px 40px rgba(76, 175, 80, 0.35);
+  border-color: rgba(76, 175, 80, 0.3);
 }
 
 .media-image-container {
@@ -2608,26 +2753,68 @@ footer {
 }
 
 .media-content {
-  padding: 20px;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(15, 15, 15, 0.98) 0%, rgba(25, 25, 25, 0.98) 100%);
+  border-top: 2px solid rgba(76, 175, 80, 0.3);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 -4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.media-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(76, 175, 80, 0.8) 0%, rgba(76, 175, 80, 0.2) 100%);
+  z-index: 0;
+}
+
+.media-content::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+  z-index: 0;
 }
 
 .media-title {
   font-size: 1.3rem;
-  margin-bottom: 10px;
-  color: #333;
-  font-weight: 600;
+  margin-bottom: 12px;
+  color: #ffffff;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.3px;
 }
 
 .media-description {
   font-size: 0.9rem;
-  color: #666;
-  line-height: 1.6;
-  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.2px;
 }
 
 .media-date {
   font-size: 0.8rem;
-  color: #888;
+  color: rgba(76, 175, 80, 0.9);
+  position: relative;
+  z-index: 1;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .media-video-placeholder {

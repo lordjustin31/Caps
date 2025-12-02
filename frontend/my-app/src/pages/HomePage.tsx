@@ -13,6 +13,9 @@ import house123Image from '../images/house123.png';
 import service1Image from '../images/service-1.png';
 import service2Image from '../images/service-2.png';
 import service3Image from '../images/service-3.png';
+import BuildIcon from '@mui/icons-material/Build';
+import PaymentIcon from '@mui/icons-material/Payment';
+import PeopleIcon from '@mui/icons-material/People';
 
 interface User {
   id: number;
@@ -21,9 +24,11 @@ interface User {
   last_name: string;
   email: string;
   is_staff: boolean;
+  is_verified?: boolean;
   profile?: {
     contact_number?: string;
     profile_image?: string;
+    is_verified?: boolean;
   };
 }
 
@@ -348,9 +353,22 @@ const HomePage: React.FC = () => {
         setBlogPosts(blogPostsData); // Store all blog posts for Bulletin Board
 
         // Fetch bookings
-        const bookingsRes = await fetch('http://127.0.0.1:8000/api/bookings/', { headers });
-        const bookingsData: Booking[] = bookingsRes.ok ? await bookingsRes.json() : [];
-        setBookings(bookingsData); // Store bookings for Bulletin Board
+        try {
+          const bookingsRes = await fetch('http://127.0.0.1:8000/api/bookings/', { headers });
+          if (bookingsRes.ok) {
+            const bookingsData: Booking[] = await bookingsRes.json();
+            setBookings(Array.isArray(bookingsData) ? bookingsData : []);
+          } else {
+            console.error('Failed to fetch bookings:', bookingsRes.status, bookingsRes.statusText);
+            if (bookingsRes.status === 401) {
+              console.warn('Authentication required for bookings');
+            }
+            setBookings([]);
+          }
+        } catch (err) {
+          console.error('Error fetching bookings:', err);
+          setBookings([]);
+        }
 
         // Fetch pins
         const pinsRes = await fetch('http://127.0.0.1:8000/api/pins/');
@@ -404,7 +422,7 @@ const HomePage: React.FC = () => {
         ];
 
         // Convert all blog posts to BlogStory format
-        const convertedBlogs: BlogStory[] = blogPostsData.map((post) => ({
+        const convertedBlogs: BlogStory[] = blogPostsData.map((post: any) => ({
           id: post.id,
           title: post.title,
           content: post.body,
@@ -412,7 +430,9 @@ const HomePage: React.FC = () => {
           date: new Date().toISOString(),
           category: 'Community',
           readTime: `${Math.ceil(post.body.length / 200)} min read`,
-          image: house123Image,
+          image: post.image 
+            ? (post.image.startsWith('http') ? post.image : `http://127.0.0.1:8000${post.image}`)
+            : house123Image,
           isRealPost: true, // Mark as real post from database
         }));
         
@@ -432,7 +452,9 @@ const HomePage: React.FC = () => {
             id: item.id,
             title: item.title,
             description: item.description || '',
-            imageUrl: item.media_url || '',
+            imageUrl: item.media_url 
+              ? (item.media_url.startsWith('http') ? item.media_url : `http://127.0.0.1:8000${item.media_url}`)
+              : '',
             type: item.media_type as 'image' | 'video',
             date: item.created_at || new Date().toISOString(),
           }));
@@ -510,6 +532,7 @@ const HomePage: React.FC = () => {
       return () => clearInterval(intervalId);
     } else {
       setComments([]);
+      return undefined;
     }
   }, [selectedBlog]);
 
@@ -899,17 +922,6 @@ const HomePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Advertisement Banner 1 */}
-        <div className="advertisement-banner" onClick={() => navigate('/house-sales')}>
-          <div className="ad-content">
-            <div className="ad-text">
-              <h3 className="ad-title">Find Your Dream Home Today!</h3>
-              <p className="ad-description">Browse our exclusive listings and discover the perfect home for you and your family</p>
-            </div>
-            <button className="ad-button">Buy Now →</button>
-          </div>
-        </div>
-
         {/* Services Section - Second Priority */}
         <div className="services-main-section">
           <div className="section-header-modern">
@@ -956,17 +968,6 @@ const HomePage: React.FC = () => {
                 <span className="service-link">Book Now →</span>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Advertisement Banner 2 */}
-        <div className="advertisement-banner ad-banner-2" onClick={() => navigate('/calendar')}>
-          <div className="ad-content">
-            <div className="ad-text">
-              <h3 className="ad-title">Book Community Amenities</h3>
-              <p className="ad-description">Reserve function halls, pools, and sports facilities for your events</p>
-            </div>
-            <button className="ad-button">Book Now →</button>
           </div>
         </div>
 
@@ -1400,6 +1401,57 @@ const HomePage: React.FC = () => {
           </div>
         )}
 
+        {/* Services Section 2 - Maintenance, Billing, Visitors - Only for verified homeowners */}
+        {user && !user.is_staff && (user.is_verified || user.profile?.is_verified) && (
+          <div className="services-main-section">
+            <div className="section-header-modern">
+              <span className="section-label">Resident Services</span>
+              <h2 className="section-heading">Our Services</h2>
+            </div>
+            <div className="services-grid-modern">
+              <div 
+                className="service-item service-clickable"
+                onClick={() => navigate('/maintenance-request')}
+              >
+                <div className="service-image-box">
+                  <BuildIcon sx={{ fontSize: 64, color: '#2e6F40' }} />
+                </div>
+                <div className="service-content">
+                  <h3>Maintenance</h3>
+                  <p>Request professional maintenance services for your home. From carpentry to air conditioning repair.</p>
+                  <span className="service-link">Request Service →</span>
+                </div>
+              </div>
+              <div 
+                className="service-item service-clickable"
+                onClick={() => navigate('/billing')}
+              >
+                <div className="service-image-box">
+                  <PaymentIcon sx={{ fontSize: 64, color: '#2e6F40' }} />
+                </div>
+                <div className="service-content">
+                  <h3>Billing</h3>
+                  <p>Manage your bills and service fees. View payment history and upload receipts easily.</p>
+                  <span className="service-link">View Billing →</span>
+                </div>
+              </div>
+              <div 
+                className="service-item service-clickable"
+                onClick={() => navigate('/resident-dashboard')}
+              >
+                <div className="service-image-box">
+                  <PeopleIcon sx={{ fontSize: 64, color: '#2e6F40' }} />
+                </div>
+                <div className="service-content">
+                  <h3>Visitors</h3>
+                  <p>Manage your visitors. Generate PINs, approve requests, and track visitor check-ins.</p>
+                  <span className="service-link">Manage Visitors →</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Blogs & Stories Section */}
         <div className="section-container blogs-stories-container">
           <div className="section-header">
@@ -1603,48 +1655,6 @@ const HomePage: React.FC = () => {
             </div>
           )}
         </div>
-
-        {/* Community Alerts Section */}
-        {alerts.length > 0 && (
-          <div className="section-container alerts-section">
-            <p style={{ color: '#4CAF50', fontWeight: 'bold', marginBottom: '10px', textAlign: 'center' }}>Important</p>
-            <h2 style={{ fontSize: '2.5rem', marginBottom: '40px', fontWeight: 'bold', textAlign: 'center' }}>Community Alerts</h2>
-            <div className="alerts-grid">
-              {alerts.map((alert) => (
-                <div
-                  key={alert.id}
-                  className={`alert-card alert-${alert.severity}`}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '10px' }}>
-                    <h3 style={{ marginBottom: '10px', fontSize: '1.2rem' }}>{alert.title}</h3>
-                    <span
-                      style={{
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        fontSize: '0.75rem',
-                        fontWeight: 'bold',
-                        textTransform: 'uppercase',
-                        backgroundColor:
-                          alert.severity === 'critical'
-                            ? '#f44336'
-                            : alert.severity === 'warning'
-                            ? '#ff9800'
-                            : '#2196F3',
-                        color: 'white',
-                      }}
-                    >
-                      {alert.severity}
-                    </span>
-                  </div>
-                  <p style={{ fontSize: '0.95rem', color: '#555', lineHeight: '1.6' }}>{alert.message}</p>
-                  <span style={{ fontSize: '0.85rem', color: '#888', marginTop: '10px', display: 'block' }}>
-                    {new Date(alert.created_at).toLocaleDateString()}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Media Modal */}
         {selectedMedia && (

@@ -40,6 +40,7 @@ interface VisitorRequest {
   visitor_name: string;
   visitor_email: string;
   visitor_contact_number: string;
+  vehicle_plate_number?: string | null;
   reason?: string;
   one_time_pin?: string | null;
   visit_date: string;
@@ -70,6 +71,7 @@ const ResidentDashboard: React.FC = () => {
     visitor_name: '',
     visitor_email: '',
     visitor_contact_number: '',
+    vehicle_plate_number: '',
     reason: '',
     visit_date: '',
     visit_end_date: '',
@@ -272,6 +274,7 @@ const ResidentDashboard: React.FC = () => {
         visitor_name: '',
         visitor_email: '',
         visitor_contact_number: '',
+        vehicle_plate_number: '',
         reason: '',
         visit_date: '',
         visit_end_date: '',
@@ -447,6 +450,19 @@ const ResidentDashboard: React.FC = () => {
                 </div>
                 <div>
                   <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                    Vehicle Plate Number (if applicable)
+                  </label>
+                  <input
+                    type="text"
+                    name="vehicle_plate_number"
+                    value={requestFormData.vehicle_plate_number}
+                    onChange={handleRequestInputChange}
+                    placeholder="Optional"
+                    style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ddd' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
                     Visit Start Date <span style={{ color: 'red' }}>*</span>
                   </label>
                   <input
@@ -610,6 +626,9 @@ const ResidentDashboard: React.FC = () => {
                       )}
                     </p>
                     <p><strong>Time:</strong> {req.visit_start_time} - {req.visit_end_time}</p>
+                    {req.vehicle_plate_number && (
+                      <p><strong>Vehicle Plate:</strong> {req.vehicle_plate_number}</p>
+                    )}
                   </div>
                   {req.reason && <p><strong>Reason:</strong> {req.reason}</p>}
                   {req.one_time_pin && req.status === 'approved' && (

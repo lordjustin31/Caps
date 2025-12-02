@@ -31,6 +31,9 @@ interface VerificationResponse {
     is_valid: boolean;
     is_pending: boolean;
     is_declined: boolean;
+    is_not_yet_valid?: boolean;
+    is_past_valid?: boolean;
+    is_within_window?: boolean;
     status_message: string;
   };
   error?: string;
@@ -255,12 +258,27 @@ const GuardVerificationPage: React.FC = () => {
 
         {/* Verification Result */}
         {verificationResult && (
-          <div className={`verification-result ${verificationResult.valid ? 'valid' : 'invalid'}`}>
+          <div className={`verification-result ${
+            verificationResult.valid ? 'valid' : 
+            verificationResult.details?.is_approved && verificationResult.details?.is_not_yet_valid ? 'warning' :
+            verificationResult.details?.is_approved && verificationResult.details?.is_past_valid ? 'expired' :
+            'invalid'
+          }`}>
             <div className="result-header">
               {verificationResult.valid ? (
                 <>
                   <span className="result-icon">✅</span>
                   <h2>PIN VERIFIED</h2>
+                </>
+              ) : verificationResult.details?.is_approved && verificationResult.details?.is_not_yet_valid ? (
+                <>
+                  <span className="result-icon">⏰</span>
+                  <h2>APPROVED - NOT YET VALID</h2>
+                </>
+              ) : verificationResult.details?.is_approved && verificationResult.details?.is_past_valid ? (
+                <>
+                  <span className="result-icon">⏰</span>
+                  <h2>APPROVED - EXPIRED</h2>
                 </>
               ) : (
                 <>
@@ -270,7 +288,14 @@ const GuardVerificationPage: React.FC = () => {
               )}
             </div>
 
-            {verificationResult.valid ? (
+            {/* Show status message prominently */}
+            {verificationResult.details?.status_message && (
+              <div className="status-message-banner">
+                {verificationResult.details.status_message}
+              </div>
+            )}
+
+            {verificationResult.valid || (verificationResult.details?.is_approved && !verificationResult.details?.is_used) ? (
               <div className="visitor-details">
                 <div className="detail-section">
                   <h3>Visitor Information</h3>
@@ -316,9 +341,12 @@ const GuardVerificationPage: React.FC = () => {
               </div>
             ) : (
               <div className="invalid-details">
-                <p className="status-message">
-                  {verificationResult.details?.status_message || verificationResult.error || 'PIN is not valid'}
-                </p>
+                {/* Status message is already shown in banner above, but show it here too for clarity */}
+                {!verificationResult.details?.status_message && (
+                  <p className="status-message">
+                    {verificationResult.error || 'PIN is not valid'}
+                  </p>
+                )}
                 {verificationResult.visitor_request && (
                   <div className="detail-section">
                     <h3>Request Status</h3>
@@ -330,6 +358,15 @@ const GuardVerificationPage: React.FC = () => {
                     {verificationResult.visitor_request.visitor_name && (
                       <div className="detail-item">
                         <strong>Visitor:</strong> {verificationResult.visitor_request.visitor_name}
+                      </div>
+                    )}
+                    {verificationResult.visitor_request.visit_date && (
+                      <div className="detail-item">
+                        <strong>Visit Date:</strong> {verificationResult.visitor_request.visit_date}
+                        {verificationResult.visitor_request.visit_start_time && 
+                         verificationResult.visitor_request.visit_end_time && (
+                          <> ({verificationResult.visitor_request.visit_start_time} - {verificationResult.visitor_request.visit_end_time})</>
+                        )}
                       </div>
                     )}
                   </div>

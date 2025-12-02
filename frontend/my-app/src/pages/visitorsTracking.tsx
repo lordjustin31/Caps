@@ -29,6 +29,7 @@ interface VisitorRequestItem {
   visitor_name: string;
   visitor_email: string;
   visitor_contact_number: string;
+  vehicle_plate_number?: string | null;
   reason?: string;
   one_time_pin?: string | null;
   visit_date: string;
@@ -577,6 +578,9 @@ const VisitorsTracking: React.FC = () => {
                               <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', fontSize: '14px', color: '#666' }}>
                                 <span><strong>Email:</strong> {req.visitor_email}</span>
                                 <span><strong>Contact:</strong> {req.visitor_contact_number || 'N/A'}</span>
+                                {req.vehicle_plate_number && (
+                                  <span><strong>Vehicle Plate:</strong> {req.vehicle_plate_number}</span>
+                                )}
                                 <span><strong>Homeowner:</strong> {req.resident_name || req.resident_username}</span>
                               </div>
                             </div>
@@ -666,27 +670,6 @@ const VisitorsTracking: React.FC = () => {
                               🗑️ Delete
                             </button>
                           </div>
-
-                          {req.pdf_url && (
-                            <div style={{ marginTop: '10px' }}>
-                              <a
-                                href={req.pdf_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                  padding: '8px 16px',
-                                  backgroundColor: '#2196F3',
-                                  color: 'white',
-                                  textDecoration: 'none',
-                                  borderRadius: '6px',
-                                  fontSize: '14px',
-                                  display: 'inline-block'
-                                }}
-                              >
-                                📄 Download PDF
-                              </a>
-                            </div>
-                          )}
 
                           <div style={{ fontSize: '12px', color: '#999', marginTop: '10px' }}>
                             Created: {new Date(req.created_at).toLocaleString()}
