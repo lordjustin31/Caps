@@ -158,7 +158,7 @@ const PinPopupContent: React.FC<PinPopupContentProps> = ({
           backgroundColor: '#f5f5f5'
         }}>
           <img 
-            src={pin.image.startsWith('http') ? pin.image : `http://localhost:8000${pin.image}`}
+            src={pin.image.startsWith('http') ? pin.image : `https://caps-em1t.onrender.com${pin.image}`}
             alt={pin.name}
             style={{
               width: '100%',

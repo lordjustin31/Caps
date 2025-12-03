@@ -673,7 +673,7 @@ const PinPopupEditor: React.FC<PinPopupEditorProps> = ({ pin, isAdmin, onDelete,
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const resolveImageUrl = useCallback((imagePath?: string | null) => {
     if (!imagePath) return null;
-    return imagePath.startsWith('http') ? imagePath : `http://localhost:8000${imagePath}`;
+    return imagePath.startsWith('http') ? imagePath : `https://caps-em1t.onrender.com${imagePath}`;
   }, []);
   const [imagePreview, setImagePreview] = useState<string | null>(resolveImageUrl(pin.image));
 

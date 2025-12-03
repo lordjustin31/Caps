@@ -496,7 +496,7 @@ const BookingAmenities: React.FC = () => {
       let errorMsg = "Unknown error";
       
       if (err.code === 'ERR_NETWORK' || err.message === 'Network Error' || err.message?.includes('Failed to fetch')) {
-        errorMsg = "Cannot connect to server. Please make sure the backend server is running at http://localhost:8000";
+        errorMsg = "Cannot connect to server. Please make sure the backend server is running at https://caps-em1t.onrender.com";
       } else if (err.response) {
         // Server responded with error
         const responseData = err.response.data;
