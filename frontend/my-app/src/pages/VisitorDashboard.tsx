@@ -12,7 +12,7 @@ interface Visitor {
   status: "pending" | "approved" | "declined";
 }
 
-const API_URL = "http://127.0.0.1:8000/api/visitor/";
+const API_URL = "https://caps-em1t.onrender.com/api/visitor/";
 
 const VisitorDashboard: React.FC = () => {
   const [visitors, setVisitors] = useState<Visitor[]>([]);

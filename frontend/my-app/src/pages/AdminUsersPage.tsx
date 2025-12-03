@@ -45,7 +45,7 @@ const currentRecordRaw = records[currentIndex]; // might be undefined
 const currentRecord = currentRecordRaw
   ? currentRecordRaw.startsWith('http')
     ? currentRecordRaw
-    : `http://127.0.0.1:8000${currentRecordRaw}`
+    : `https://caps-em1t.onrender.com${currentRecordRaw}`
   : ''; // fallback to empty string
 
 const isPDF = currentRecord.endsWith('.pdf');
@@ -111,7 +111,7 @@ const AdminUsersPage: React.FC = () => {
       return;
     }
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/admin/users/', {
+      const res = await fetch('https://caps-em1t.onrender.com/api/admin/users/', {
         headers: { Authorization: `Bearer ${currentToken}` },
       });
       if (res.status === 401) {
@@ -155,7 +155,7 @@ const AdminUsersPage: React.FC = () => {
     }
     
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/admin/verify-user/${user.id}/`, {
+      const res = await fetch(`https://caps-em1t.onrender.com/api/admin/verify-user/${user.id}/`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${currentToken}` }
       });
@@ -190,7 +190,7 @@ const AdminUsersPage: React.FC = () => {
       return;
     }
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/admin/reject-user/${user.id}/`, {
+      const res = await fetch(`https://caps-em1t.onrender.com/api/admin/reject-user/${user.id}/`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${currentToken}` }
       });
@@ -235,7 +235,7 @@ const AdminUsersPage: React.FC = () => {
     }
     
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/admin/reject-user/${user.id}/`, {
+      const res = await fetch(`https://caps-em1t.onrender.com/api/admin/reject-user/${user.id}/`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${currentToken}` }
       });
@@ -278,7 +278,7 @@ const AdminUsersPage: React.FC = () => {
     }
 
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/admin/users/${id}/delete/`, {
+      const res = await fetch(`https://caps-em1t.onrender.com/api/admin/users/${id}/delete/`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${currentToken}` },
       });
@@ -352,7 +352,7 @@ const handleEditSave = async () => {
   try {
     /** 🔹 STEP 1: UPDATE USER INFO **/
     const res = await fetch(
-      `http://127.0.0.1:8000/api/admin/users/${editingUser.id}/update/`,
+      `https://caps-em1t.onrender.com/api/admin/users/${editingUser.id}/update/`,
       {
         method: "PUT",
         headers: {
@@ -395,7 +395,7 @@ const handleEditSave = async () => {
     /** 🔹 STEP 2: If password was provided, update with admin endpoint */
     if (formData.new_password) {
       const passRes = await fetch(
-        `http://127.0.0.1:8000/api/admin/users/${editingUser.id}/change-password/`,
+        `https://caps-em1t.onrender.com/api/admin/users/${editingUser.id}/change-password/`,
         {
           method: "PUT",
           headers: {
@@ -429,7 +429,7 @@ const handleEditSave = async () => {
   //   if (!editingUser) return;
 
   //   try {
-  //     const res = await fetch(`http://127.0.0.1:8000/api/admin/users/${editingUser.id}/update/`, {
+  //     const res = await fetch(`https://caps-em1t.onrender.com/api/admin/users/${editingUser.id}/update/`, {
   //       method: 'PUT',
   //       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
   //       body: JSON.stringify(formData),
@@ -642,7 +642,7 @@ const handleEditSave = async () => {
                               <a
                                 href={user.profile.document.startsWith('http')
                                   ? user.profile.document
-                                  : `http://127.0.0.1:8000${user.profile.document}`}
+                                  : `https://caps-em1t.onrender.com${user.profile.document}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
@@ -716,7 +716,7 @@ const handleEditSave = async () => {
                           {user.profile?.billing_records && user.profile.billing_records.length > 0 ? (
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
                               {user.profile.billing_records.slice(0, 3).map((bill, i) => {
-                                const url = bill.startsWith('http') ? bill : `http://127.0.0.1:8000${bill}`;
+                                const url = bill.startsWith('http') ? bill : `https://caps-em1t.onrender.com${bill}`;
                                 const isPDF = url.endsWith('.pdf');
                                 return isPDF ? (
                                   <img
@@ -1053,7 +1053,7 @@ const handleEditSave = async () => {
                 }
 
                 try {
-                  const res = await fetch('http://127.0.0.1:8000/api/admin/users/create/', {
+                  const res = await fetch('https://caps-em1t.onrender.com/api/admin/users/create/', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',

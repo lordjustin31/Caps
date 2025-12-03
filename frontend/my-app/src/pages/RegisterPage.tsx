@@ -39,7 +39,7 @@ const RegisterPage: React.FC = () => {
     if (emailError) return alert(emailError);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/send_verification_email/', {
+      const res = await fetch('https://caps-em1t.onrender.com/api/send_verification_email/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -60,7 +60,7 @@ const RegisterPage: React.FC = () => {
 
   const verifyCode = async () => {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/verify_email_code/', {
+      const res = await fetch('https://caps-em1t.onrender.com/api/verify_email_code/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, code: verificationCode }),
@@ -100,7 +100,7 @@ const RegisterPage: React.FC = () => {
     }
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/register/', {
+      const res = await fetch('https://caps-em1t.onrender.com/api/register/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -291,7 +291,7 @@ export default RegisterPage;
 // // ✅ Auto-switch between localhost and ngrok
 // const API_BASE_URL =
 //   window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-//     ? 'http://127.0.0.1:8000'
+//     ? 'https://caps-em1t.onrender.com'
 //     : 'https://7e0311ebfe5d.ngrok-free.app';
 
 // const RegisterPage: React.FC = () => {

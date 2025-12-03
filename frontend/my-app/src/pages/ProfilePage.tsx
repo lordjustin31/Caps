@@ -79,7 +79,7 @@ const ProfilePage: React.FC = () => {
   // ------------------ PROFILE ------------------
   const fetchProfile = async () => {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/profile/', {
+      const res = await fetch('https://caps-em1t.onrender.com/api/profile/', {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error('Unauthorized');
@@ -137,7 +137,7 @@ const ProfilePage: React.FC = () => {
     if (profileImage) formData.append('profile_image', profileImage);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/profile/update/', {
+      const res = await fetch('https://caps-em1t.onrender.com/api/profile/update/', {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -166,7 +166,7 @@ const ProfilePage: React.FC = () => {
     }
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/change-password/', {
+      const res = await fetch('https://caps-em1t.onrender.com/api/change-password/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ old_password: currentPassword, new_password: newPassword }),
@@ -194,7 +194,7 @@ const ProfilePage: React.FC = () => {
     formData.append('document', documentFile);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/profile/upload-document/', {
+      const res = await fetch('https://caps-em1t.onrender.com/api/profile/upload-document/', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -215,7 +215,7 @@ const ProfilePage: React.FC = () => {
   const profileImageUrl = croppedImage || (storedImage
     ? storedImage.startsWith('http')
       ? storedImage
-      : `http://127.0.0.1:8000${storedImage}`
+      : `https://caps-em1t.onrender.com${storedImage}`
     : defaultProfile);
 
 
@@ -228,7 +228,7 @@ const handleUploadBilling = async () => {
   formData.append('billing', billingFile);
 
   try {
-    const res = await fetch('http://127.0.0.1:8000/api/profile/upload-billing/', {
+    const res = await fetch('https://caps-em1t.onrender.com/api/profile/upload-billing/', {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
@@ -353,7 +353,7 @@ const handleUploadBilling = async () => {
             href={
               profile.profile.document.startsWith("http")
                 ? profile.profile.document
-                : `http://127.0.0.1:8000${profile.profile.document}`
+                : `https://caps-em1t.onrender.com${profile.profile.document}`
             }
             target="_blank"
             rel="noopener noreferrer"
@@ -377,7 +377,7 @@ const handleUploadBilling = async () => {
               href={
                 profile.profile.document.startsWith("http")
                   ? profile.profile.document
-                  : `http://127.0.0.1:8000${profile.profile.document}`
+                  : `https://caps-em1t.onrender.com${profile.profile.document}`
               }
               target="_blank"
               rel="noopener noreferrer"
@@ -508,7 +508,7 @@ const handleUploadBilling = async () => {
                   <span className="info-label">Uploaded Document</span>
                   <div className="info-value">
                     <a
-                      href={profile.profile.document.startsWith('http') ? profile.profile.document : `http://127.0.0.1:8000${profile.profile.document}`}
+                      href={profile.profile.document.startsWith('http') ? profile.profile.document : `https://caps-em1t.onrender.com${profile.profile.document}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ color: '#667eea', textDecoration: 'none', fontWeight: '600' }}
@@ -652,7 +652,7 @@ export default ProfilePage;
 
 //   const fetchProfile = async () => {
 //     try {
-//       const res = await fetch('http://127.0.0.1:8000/api/profile/', {
+//       const res = await fetch('https://caps-em1t.onrender.com/api/profile/', {
 //         headers: { Authorization: `Bearer ${token}` },
 //       });
 //       if (!res.ok) throw new Error('Unauthorized');
@@ -708,7 +708,7 @@ export default ProfilePage;
 //     if (profileImage) formData.append('profile_image', profileImage);
 
 //     try {
-//       const res = await fetch('http://127.0.0.1:8000/api/profile/update/', {
+//       const res = await fetch('https://caps-em1t.onrender.com/api/profile/update/', {
 //         method: 'PUT',
 //         headers: { Authorization: `Bearer ${token}` },
 //         body: formData,
@@ -737,7 +737,7 @@ export default ProfilePage;
 //     }
 
 //     try {
-//       const res = await fetch('http://127.0.0.1:8000/api/change-password/', {
+//       const res = await fetch('https://caps-em1t.onrender.com/api/change-password/', {
 //         method: 'POST',
 //         headers: {
 //           'Content-Type': 'application/json',
@@ -773,7 +773,7 @@ export default ProfilePage;
 //     formData.append('document', documentFile);
 
 //     try {
-//       const res = await fetch('http://127.0.0.1:8000/api/profile/upload-document/', {
+//       const res = await fetch('https://caps-em1t.onrender.com/api/profile/upload-document/', {
 //         method: 'POST',
 //         headers: { Authorization: `Bearer ${token}` },
 //         body: formData,
@@ -795,7 +795,7 @@ export default ProfilePage;
 //   const profileImageUrl = croppedImage || (storedImage
 //     ? storedImage.startsWith('http')
 //       ? storedImage
-//       : `http://127.0.0.1:8000${storedImage}`
+//       : `https://caps-em1t.onrender.com${storedImage}`
 //     : defaultProfile);
 
 //   return (
@@ -867,7 +867,7 @@ export default ProfilePage;
 //               <p>
 //                 <strong>Uploaded Document:</strong>{" "}
 //                 <a
-//                   href={profile.profile.document.startsWith('http') ? profile.profile.document : `http://127.0.0.1:8000${profile.profile.document}`}
+//                   href={profile.profile.document.startsWith('http') ? profile.profile.document : `https://caps-em1t.onrender.com${profile.profile.document}`}
 //                   target="_blank"
 //                   rel="noopener noreferrer"
 //                 >

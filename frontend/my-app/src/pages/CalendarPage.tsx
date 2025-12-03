@@ -54,7 +54,7 @@ const CalendarPage: React.FC = () => {
     if (savedToken) {
       setToken(savedToken);
       // Check if user is admin
-      axios.get("http://127.0.0.1:8000/api/profile/", {
+      axios.get("https://caps-em1t.onrender.com/api/profile/", {
         headers: { Authorization: `Bearer ${savedToken}` }
       })
       .then(res => setIsAdmin(res.data.is_staff || false))
@@ -65,7 +65,7 @@ const CalendarPage: React.FC = () => {
   // Axios instance
   const axiosInstance = useMemo(() => {
     return axios.create({
-      baseURL: "http://127.0.0.1:8000/api/",
+      baseURL: "https://caps-em1t.onrender.com/api/",
       timeout: 10000,
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     });

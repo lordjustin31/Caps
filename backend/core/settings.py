@@ -17,10 +17,7 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.environ.get(
-    "DJANGO_ALLOWED_HOSTS",
-    "localhost,127.0.0.1,caps-em1t.onrender.com"
-).split(",")
+ALLOWED_HOSTS = ["*"]
 
 # --- Applications ---
 INSTALLED_APPS = [
@@ -119,9 +116,9 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",
-    ),
+"DEFAULT_PERMISSION_CLASSES": (
+    "rest_framework.permissions.AllowAny",
+),
     "DEFAULT_PARSER_CLASSES": [
         "rest_framework.parsers.JSONParser",
         "rest_framework.parsers.MultiPartParser",
@@ -143,12 +140,14 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "https://caps-rouge.vercel.app",
+    "https://caps-em1t.onrender.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "https://caps-rouge.vercel.app",
+    "https://caps-em1t.onrender.com", 
 ]
 
 # --- Email ---

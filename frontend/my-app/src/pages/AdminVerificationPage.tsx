@@ -30,7 +30,7 @@ const AdminVerificationPage: React.FC = () => {
   const fetchPendingUsers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://127.0.0.1:8000/api/admin/pending-verifications/", {
+      const res = await axios.get("https://caps-em1t.onrender.com/api/admin/pending-verifications/", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPendingUsers(res.data);
@@ -50,7 +50,7 @@ const AdminVerificationPage: React.FC = () => {
   const verifyUser = async (userId: number) => {
     setVerifying(true);
     try {
-      await axios.put(`http://127.0.0.1:8000/api/admin/verify-user/${userId}/`, null, {
+      await axios.put(`https://caps-em1t.onrender.com/api/admin/verify-user/${userId}/`, null, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success("User verified successfully!");
@@ -66,7 +66,7 @@ const AdminVerificationPage: React.FC = () => {
   const rejectUser = async (userId: number) => {
     setVerifying(true);
     try {
-      await axios.put(`http://127.0.0.1:8000/api/admin/reject-user/${userId}/`, null, {
+      await axios.put(`https://caps-em1t.onrender.com/api/admin/reject-user/${userId}/`, null, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success("User rejected successfully!");
@@ -112,7 +112,7 @@ const AdminVerificationPage: React.FC = () => {
                         <td>
                           {user.document ? (
                             <a
-                              href={user.document.startsWith("http") ? user.document : `http://127.0.0.1:8000${user.document}`}
+                              href={user.document.startsWith("http") ? user.document : `https://caps-em1t.onrender.com${user.document}`}
                               target="_blank"
                               rel="noopener noreferrer"
                             >

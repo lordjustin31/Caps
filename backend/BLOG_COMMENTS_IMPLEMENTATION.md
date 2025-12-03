@@ -65,7 +65,7 @@ Added `BlogCommentAdmin` for easy management in Django admin panel.
 
 ## API Endpoints
 
-### Base URL: `http://127.0.0.1:8000/api/blog-comments/`
+### Base URL: `https://caps-em1t.onrender.com/api/blog-comments/`
 
 ### 1. **List All Comments** (Anyone can view)
 ```http
@@ -169,7 +169,7 @@ Authorization: Bearer <token>
 ### Fetch Comments for a Blog Post
 ```javascript
 // Get comments for post ID 1
-fetch('http://127.0.0.1:8000/api/blog-comments/?post_id=1')
+fetch('https://caps-em1t.onrender.com/api/blog-comments/?post_id=1')
   .then(res => res.json())
   .then(comments => {
     console.log('Comments:', comments);
@@ -180,7 +180,7 @@ fetch('http://127.0.0.1:8000/api/blog-comments/?post_id=1')
 ```javascript
 const token = localStorage.getItem('token'); // Your JWT token
 
-fetch('http://127.0.0.1:8000/api/blog-comments/', {
+fetch('https://caps-em1t.onrender.com/api/blog-comments/', {
   method: 'POST',
   headers: {
     'Authorization': `Bearer ${token}`,
@@ -199,7 +199,7 @@ fetch('http://127.0.0.1:8000/api/blog-comments/', {
 
 ### Update a Comment (Owner or Admin)
 ```javascript
-fetch('http://127.0.0.1:8000/api/blog-comments/2/', {
+fetch('https://caps-em1t.onrender.com/api/blog-comments/2/', {
   method: 'PATCH',
   headers: {
     'Authorization': `Bearer ${token}`,
@@ -217,7 +217,7 @@ fetch('http://127.0.0.1:8000/api/blog-comments/2/', {
 
 ### Delete a Comment (Owner or Admin)
 ```javascript
-fetch('http://127.0.0.1:8000/api/blog-comments/2/', {
+fetch('https://caps-em1t.onrender.com/api/blog-comments/2/', {
   method: 'DELETE',
   headers: {
     'Authorization': `Bearer ${token}`,
@@ -246,12 +246,12 @@ This creates the `blog_comment` table in your database.
 
 1. **List comments (no auth needed):**
 ```bash
-curl http://127.0.0.1:8000/api/blog-comments/
+curl https://caps-em1t.onrender.com/api/blog-comments/
 ```
 
 2. **Create comment (auth required):**
 ```bash
-curl -X POST http://127.0.0.1:8000/api/blog-comments/ \
+curl -X POST https://caps-em1t.onrender.com/api/blog-comments/ \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"post": 1, "content": "Test comment"}'
@@ -259,7 +259,7 @@ curl -X POST http://127.0.0.1:8000/api/blog-comments/ \
 
 3. **Filter by post_id:**
 ```bash
-curl http://127.0.0.1:8000/api/blog-comments/?post_id=1
+curl https://caps-em1t.onrender.com/api/blog-comments/?post_id=1
 ```
 
 ## Summary

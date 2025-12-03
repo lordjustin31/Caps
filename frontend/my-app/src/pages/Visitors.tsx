@@ -40,7 +40,7 @@ interface VerificationResponse {
 }
 
 // ---------------- API Endpoint ----------------
-const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = "https://caps-em1t.onrender.com/api";
 const VERIFY_PIN_API = `${API_URL}/visitor-requests/verify_pin/`;
 
 // ---------------- Component ----------------

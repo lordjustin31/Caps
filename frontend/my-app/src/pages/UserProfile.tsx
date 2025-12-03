@@ -19,7 +19,7 @@
 //       return;
 //     }
 
-//     fetch('http://127.0.0.1:8000/api/profile/', {
+//     fetch('https://caps-em1t.onrender.com/api/profile/', {
 //       method: 'GET',
 //       headers: {
 //         'Authorization': `Bearer ${token}`,

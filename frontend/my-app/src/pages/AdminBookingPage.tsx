@@ -35,7 +35,7 @@ const AdminBookingPage: React.FC = () => {
   }, []);
 
   const axiosInstance = axios.create({
-    baseURL: "http://127.0.0.1:8000/api/",
+    baseURL: "https://caps-em1t.onrender.com/api/",
     timeout: 10000,
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
@@ -263,7 +263,7 @@ export default AdminBookingPage;
 
 //   // Axios instance with timeout
 //   const axiosInstance = axios.create({
-//     baseURL: "http://127.0.0.1:8000/api/",
+//     baseURL: "https://caps-em1t.onrender.com/api/",
 //     timeout: 10000, // 10 seconds timeout
 //     headers: token ? { Authorization: `Bearer ${token}` } : {},
 //   });

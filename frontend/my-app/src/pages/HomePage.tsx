@@ -211,7 +211,7 @@ const HomePage: React.FC = () => {
     }
 
     // Fetch profile
-    fetch('http://127.0.0.1:8000/api/profile/', {
+    fetch('https://caps-em1t.onrender.com/api/profile/', {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
@@ -232,10 +232,10 @@ const HomePage: React.FC = () => {
     async function fetchNewsAlerts() {
       try {
         const [newsRes, alertsRes] = await Promise.all([
-          fetch('http://127.0.0.1:8000/api/news/', {
+          fetch('https://caps-em1t.onrender.com/api/news/', {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch('http://127.0.0.1:8000/api/alerts/', {
+          fetch('https://caps-em1t.onrender.com/api/alerts/', {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -312,7 +312,7 @@ const HomePage: React.FC = () => {
         }
 
         // Fetch bulletin board posts (public endpoint - no auth required)
-        const bulletinsRes = await fetch('http://127.0.0.1:8000/api/bulletins/', { 
+        const bulletinsRes = await fetch('https://caps-em1t.onrender.com/api/bulletins/', { 
           headers: { 'Content-Type': 'application/json' } 
         });
         let bulletinsData: any[] = [];
@@ -335,26 +335,26 @@ const HomePage: React.FC = () => {
         }
 
         // Fetch news
-        const newsRes = await fetch('http://127.0.0.1:8000/api/news/', { headers });
+        const newsRes = await fetch('https://caps-em1t.onrender.com/api/news/', { headers });
         const newsData: NewsItem[] = newsRes.ok ? await newsRes.json() : [];
 
         // Fetch alerts
-        const alertsRes = await fetch('http://127.0.0.1:8000/api/alerts/', { headers });
+        const alertsRes = await fetch('https://caps-em1t.onrender.com/api/alerts/', { headers });
         const alertsData: AlertItem[] = alertsRes.ok ? await alertsRes.json() : [];
 
         // Fetch houses with images for media gallery
-        const housesRes = await fetch('http://127.0.0.1:8000/api/guest/houses/');
+        const housesRes = await fetch('https://caps-em1t.onrender.com/api/guest/houses/');
         const housesData = housesRes.ok ? await housesRes.json() : [];
         setHouses(housesData); // Store houses for Bulletin Board
 
         // Fetch blog posts
-        const blogPostsRes = await fetch('http://127.0.0.1:8000/api/posts/', { headers });
+        const blogPostsRes = await fetch('https://caps-em1t.onrender.com/api/posts/', { headers });
         const blogPostsData: Post[] = blogPostsRes.ok ? await blogPostsRes.json() : [];
         setBlogPosts(blogPostsData); // Store all blog posts for Bulletin Board
 
         // Fetch bookings
         try {
-          const bookingsRes = await fetch('http://127.0.0.1:8000/api/bookings/', { headers });
+          const bookingsRes = await fetch('https://caps-em1t.onrender.com/api/bookings/', { headers });
           if (bookingsRes.ok) {
             const bookingsData: Booking[] = await bookingsRes.json();
             setBookings(Array.isArray(bookingsData) ? bookingsData : []);
@@ -371,7 +371,7 @@ const HomePage: React.FC = () => {
         }
 
         // Fetch pins
-        const pinsRes = await fetch('http://127.0.0.1:8000/api/pins/');
+        const pinsRes = await fetch('https://caps-em1t.onrender.com/api/pins/');
         const pinsData: Pin[] = pinsRes.ok ? await pinsRes.json() : [];
         setPins(pinsData); // Store pins for Bulletin Board
         
@@ -431,7 +431,7 @@ const HomePage: React.FC = () => {
           category: 'Community',
           readTime: `${Math.ceil(post.body.length / 200)} min read`,
           image: post.image 
-            ? (post.image.startsWith('http') ? post.image : `http://127.0.0.1:8000${post.image}`)
+            ? (post.image.startsWith('http') ? post.image : `https://caps-em1t.onrender.com${post.image}`)
             : house123Image,
           isRealPost: true, // Mark as real post from database
         }));
@@ -439,7 +439,7 @@ const HomePage: React.FC = () => {
         setBlogStories(convertedBlogs);
 
         // Fetch community media from API
-        const mediaRes = await fetch('http://127.0.0.1:8000/api/community-media/?is_public=true', { headers });
+        const mediaRes = await fetch('https://caps-em1t.onrender.com/api/community-media/?is_public=true', { headers });
         let communityMediaData: any[] = [];
         if (mediaRes.ok) {
           communityMediaData = await mediaRes.json();
@@ -453,7 +453,7 @@ const HomePage: React.FC = () => {
             title: item.title,
             description: item.description || '',
             imageUrl: item.media_url 
-              ? (item.media_url.startsWith('http') ? item.media_url : `http://127.0.0.1:8000${item.media_url}`)
+              ? (item.media_url.startsWith('http') ? item.media_url : `https://caps-em1t.onrender.com${item.media_url}`)
               : '',
             type: item.media_type as 'image' | 'video',
             date: item.created_at || new Date().toISOString(),
@@ -468,7 +468,7 @@ const HomePage: React.FC = () => {
               id: house.id || index,
               title: house.title || `House ${house.id}`,
               description: house.description || house.location || 'Beautiful home in Happy Homes community',
-              imageUrl: house.image.startsWith('http') ? house.image : `http://127.0.0.1:8000${house.image}`,
+              imageUrl: house.image.startsWith('http') ? house.image : `https://caps-em1t.onrender.com${house.image}`,
               type: 'image' as const,
               date: house.created_at || new Date().toISOString(),
             }));
@@ -545,7 +545,7 @@ const HomePage: React.FC = () => {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`http://127.0.0.1:8000/api/blog-comments/?post_id=${blogId}`, {
+      const response = await fetch(`https://caps-em1t.onrender.com/api/blog-comments/?post_id=${blogId}`, {
         method: 'GET',
         headers: headers,
       });
@@ -597,7 +597,7 @@ const HomePage: React.FC = () => {
 
       console.log('Submitting comment:', requestBody);
 
-      const response = await fetch('http://127.0.0.1:8000/api/blog-comments/', {
+      const response = await fetch('https://caps-em1t.onrender.com/api/blog-comments/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -675,7 +675,7 @@ const HomePage: React.FC = () => {
         return;
       }
 
-      const response = await fetch(`http://127.0.0.1:8000/api/blog-comments/${commentId}/`, {
+      const response = await fetch(`https://caps-em1t.onrender.com/api/blog-comments/${commentId}/`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -1093,7 +1093,7 @@ const HomePage: React.FC = () => {
                       >
                         {house.image && (
                           <img 
-                            src={house.image.startsWith('http') ? house.image : `http://127.0.0.1:8000${house.image}`}
+                            src={house.image.startsWith('http') ? house.image : `https://caps-em1t.onrender.com${house.image}`}
                             alt={house.title}
                             className="bulletin-house-image"
                           />
@@ -1278,7 +1278,7 @@ const HomePage: React.FC = () => {
                   <img 
                     src={selectedBulletinHouse.image.startsWith('http') 
                       ? selectedBulletinHouse.image 
-                      : `http://127.0.0.1:8000${selectedBulletinHouse.image}`}
+                      : `https://caps-em1t.onrender.com${selectedBulletinHouse.image}`}
                     alt={selectedBulletinHouse.title}
                   />
                 </div>
@@ -1762,7 +1762,7 @@ const HomePage: React.FC = () => {
                             <img 
                               src={user.profile.profile_image.startsWith('http') 
                                 ? user.profile.profile_image 
-                                : `http://127.0.0.1:8000${user.profile.profile_image}`}
+                                : `https://caps-em1t.onrender.com${user.profile.profile_image}`}
                               alt={user.username}
                               onError={(e) => {
                                 (e.target as HTMLImageElement).style.display = 'none';
@@ -1835,7 +1835,7 @@ const HomePage: React.FC = () => {
                                     <img 
                                       src={comment.profile_image.startsWith('http') 
                                         ? comment.profile_image 
-                                        : `http://127.0.0.1:8000${comment.profile_image}`}
+                                        : `https://caps-em1t.onrender.com${comment.profile_image}`}
                                       alt={comment.username}
                                       onError={(e) => {
                                         (e.target as HTMLImageElement).style.display = 'none';

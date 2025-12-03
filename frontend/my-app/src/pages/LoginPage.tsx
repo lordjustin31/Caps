@@ -38,7 +38,7 @@ const ForgotPassword: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     setLoading(true);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/password-reset/', {
+      const res = await fetch('https://caps-em1t.onrender.com/api/password-reset/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -290,7 +290,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
         // Fetch bulletin board posts (public endpoint)
         let postsData: Post[] = [];
         try {
-          const postsRes = await fetch('http://127.0.0.1:8000/api/posts/');
+          const postsRes = await fetch('https://caps-em1t.onrender.com/api/posts/');
           if (postsRes.ok) {
             postsData = await postsRes.json();
           } else {
@@ -305,7 +305,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
         // Fetch news (public endpoint - read only)
         let newsData: NewsItem[] = [];
         try {
-          const newsRes = await fetch('http://127.0.0.1:8000/api/news/');
+          const newsRes = await fetch('https://caps-em1t.onrender.com/api/news/');
           newsData = newsRes.ok ? await newsRes.json() : [];
         } catch (err) {
           console.warn('Could not fetch news (backend may not be running)');
@@ -314,7 +314,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
         // Fetch alerts (public endpoint - read only)
         let alertsData: AlertItem[] = [];
         try {
-          const alertsRes = await fetch('http://127.0.0.1:8000/api/alerts/');
+          const alertsRes = await fetch('https://caps-em1t.onrender.com/api/alerts/');
           alertsData = alertsRes.ok ? await alertsRes.json() : [];
         } catch (err) {
           console.warn('Could not fetch alerts (backend may not be running)');
@@ -323,7 +323,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
         // Fetch houses with images for media gallery
         let housesData = [];
         try {
-          const housesRes = await fetch('http://127.0.0.1:8000/api/guest/houses/');
+          const housesRes = await fetch('https://caps-em1t.onrender.com/api/guest/houses/');
           housesData = housesRes.ok ? await housesRes.json() : [];
         } catch (err) {
           console.warn('Could not fetch houses (backend may not be running)');
@@ -350,7 +350,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
         // Fetch community media from API (same as HomePage and AdminBulletin)
         let communityMediaData: any[] = [];
         try {
-          const mediaRes = await fetch('http://127.0.0.1:8000/api/community-media/?is_public=true');
+          const mediaRes = await fetch('https://caps-em1t.onrender.com/api/community-media/?is_public=true');
           if (mediaRes.ok) {
             communityMediaData = await mediaRes.json();
           }
@@ -366,7 +366,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
             title: item.title,
             description: item.description || '',
             imageUrl: item.media_url 
-              ? (item.media_url.startsWith('http') ? item.media_url : `http://127.0.0.1:8000${item.media_url}`)
+              ? (item.media_url.startsWith('http') ? item.media_url : `https://caps-em1t.onrender.com${item.media_url}`)
               : '',
             type: item.media_type as 'image' | 'video',
             date: item.created_at || new Date().toISOString(),
@@ -380,7 +380,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
               id: house.id || index,
               title: house.title || `House ${house.id}`,
               description: house.description || house.location || 'Beautiful home in Happy Homes community',
-              imageUrl: house.image.startsWith('http') ? house.image : `http://127.0.0.1:8000${house.image}`,
+              imageUrl: house.image.startsWith('http') ? house.image : `https://caps-em1t.onrender.com${house.image}`,
               type: 'image' as const,
               date: house.created_at || new Date().toISOString(),
             }));
@@ -408,7 +408,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
   useEffect(() => {
     const token = getToken();
     if (token) {
-      fetch('http://127.0.0.1:8000/api/profile/', {
+      fetch('https://caps-em1t.onrender.com/api/profile/', {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((res) => {
@@ -460,7 +460,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`http://127.0.0.1:8000/api/blog-comments/?post_id=${blogId}`, {
+      const response = await fetch(`https://caps-em1t.onrender.com/api/blog-comments/?post_id=${blogId}`, {
         method: 'GET',
         headers: headers,
       });
@@ -513,7 +513,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
         return;
       }
 
-      const response = await fetch('http://127.0.0.1:8000/api/blog-comments/', {
+      const response = await fetch('https://caps-em1t.onrender.com/api/blog-comments/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -591,7 +591,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
         return;
       }
 
-      const response = await fetch(`http://127.0.0.1:8000/api/blog-comments/${commentId}/`, {
+      const response = await fetch(`https://caps-em1t.onrender.com/api/blog-comments/${commentId}/`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -621,7 +621,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
     setErrorMsg('');
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/token/', {
+      const res = await fetch('https://caps-em1t.onrender.com/api/token/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -640,7 +640,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
       
       // Check if user is admin and redirect accordingly
       try {
-        const profileRes = await fetch('http://127.0.0.1:8000/api/profile/', {
+        const profileRes = await fetch('https://caps-em1t.onrender.com/api/profile/', {
           headers: { Authorization: `Bearer ${data.access}` }
         });
         if (profileRes.ok) {
@@ -662,7 +662,7 @@ const LoginPage: React.FC<LoginPageProps> = () => {
       if (err?.message?.includes('Failed to fetch') || 
           err?.message?.includes('NetworkError') || 
           err?.name === 'TypeError' && err?.message?.includes('fetch')) {
-        setErrorMsg('Cannot connect to server. Please make sure the backend server is running at http://127.0.0.1:8000');
+        setErrorMsg('Cannot connect to server. Please make sure the backend server is running at https://caps-em1t.onrender.com');
       } else if (err instanceof Error) {
         setErrorMsg(err.message);
       } else {
@@ -1768,7 +1768,7 @@ export default LoginPage;
 //     }
 
 //     try {
-//       const res = await fetch('http://127.0.0.1:8000/api/token/', {
+//       const res = await fetch('https://caps-em1t.onrender.com/api/token/', {
 //         method: 'POST',
 //         headers: { 'Content-Type': 'application/json' },
 //         body: JSON.stringify({ username, password, recaptcha: recaptchaValue }),
@@ -1924,7 +1924,7 @@ export default LoginPage;
 //     }
 
 //     try {
-//       const res = await fetch('http://127.0.0.1:8000/api/token/', {
+//       const res = await fetch('https://caps-em1t.onrender.com/api/token/', {
 //         method: 'POST',
 //         headers: { 'Content-Type': 'application/json' },
 //         body: JSON.stringify({ username, password, recaptcha: recaptchaValue }),

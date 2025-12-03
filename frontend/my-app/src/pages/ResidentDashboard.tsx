@@ -52,9 +52,9 @@ interface VisitorRequest {
   is_valid?: boolean;
 }
 
-const VISITORS_API = "http://127.0.0.1:8000/api/visitor/";
-const PROFILE_API = "http://127.0.0.1:8000/api/profile/";
-const RESIDENT_PIN_API = "http://127.0.0.1:8000/api/resident-pin/my/";
+const VISITORS_API = "https://caps-em1t.onrender.com/api/visitor/";
+const PROFILE_API = "https://caps-em1t.onrender.com/api/profile/";
+const RESIDENT_PIN_API = "https://caps-em1t.onrender.com/api/resident-pin/my/";
 const VISITOR_REQUESTS_API = `${API_URL}/visitor-requests/`;
 
 const ResidentDashboard: React.FC = () => {

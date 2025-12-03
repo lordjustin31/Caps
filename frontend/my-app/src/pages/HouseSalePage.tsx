@@ -86,7 +86,7 @@ interface House {
   created_at?: string;
 }
 
-const API_BASE = 'http://127.0.0.1:8000/api';
+const API_BASE = 'https://caps-em1t.onrender.com/api';
 
 const HouseSalePage: React.FC = () => {
   const navigate = useNavigate();

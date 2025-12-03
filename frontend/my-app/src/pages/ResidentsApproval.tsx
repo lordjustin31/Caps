@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const API_URL = "http://127.0.0.1:8000/api/residents/";
+const API_URL = "https://caps-em1t.onrender.com/api/residents/";
 
 interface Resident {
   id: number;

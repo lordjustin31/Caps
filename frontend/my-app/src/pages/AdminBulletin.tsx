@@ -2222,13 +2222,13 @@ const AdminBulletin: React.FC = () => {
                       <div style={{ marginBottom: '15px', borderRadius: '8px', overflow: 'hidden' }}>
                         {media.media_type === 'image' ? (
                           <img 
-                            src={media.media_url.startsWith('http') ? media.media_url : `http://127.0.0.1:8000${media.media_url}`}
+                            src={media.media_url.startsWith('http') ? media.media_url : `https://caps-em1t.onrender.com${media.media_url}`}
                             alt={media.title}
                             style={{ width: '100%', height: '200px', objectFit: 'cover' }}
                           />
                         ) : (
                           <video 
-                            src={media.media_url.startsWith('http') ? media.media_url : `http://127.0.0.1:8000${media.media_url}`}
+                            src={media.media_url.startsWith('http') ? media.media_url : `https://caps-em1t.onrender.com${media.media_url}`}
                             controls
                             style={{ width: '100%', height: '200px', objectFit: 'cover' }}
                           />

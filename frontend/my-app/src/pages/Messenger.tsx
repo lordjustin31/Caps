@@ -21,7 +21,7 @@ const Messenger: React.FC<MessengerProps> = ({ profile }) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/messages/", {
+    fetch("https://caps-em1t.onrender.com/api/messages/", {
       credentials: "include",
     })
       .then(async (res) => {
@@ -62,7 +62,7 @@ const Messenger: React.FC<MessengerProps> = ({ profile }) => {
       sender: profile?.username || "user",
     };
 
-    fetch("http://127.0.0.1:8000/api/messages/", {
+    fetch("https://caps-em1t.onrender.com/api/messages/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

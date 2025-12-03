@@ -51,7 +51,7 @@ interface VisitorRequestItem {
   updated_at: string;
 }
 
-const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = "https://caps-em1t.onrender.com/api";
 const VISITORS_API = `${API_URL}/admin/visitors/`;
 const VISITOR_REQUESTS_API = `${API_URL}/visitor-requests/`;
 

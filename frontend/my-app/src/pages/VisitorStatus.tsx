@@ -12,8 +12,8 @@ interface VisitorStatus {
   time_out: string | null;
 }
 
-const TIME_API = "http://127.0.0.1:8000/api/visitor/"; // patch for time in/out
-const GUEST_STATUS_API = "http://127.0.0.1:8000/api/visitor/guest-status/";
+const TIME_API = "https://caps-em1t.onrender.com/api/visitor/"; // patch for time in/out
+const GUEST_STATUS_API = "https://caps-em1t.onrender.com/api/visitor/guest-status/";
 
 const VisitorPage: React.FC = () => {
   const [visitorName, setVisitorName] = useState("");

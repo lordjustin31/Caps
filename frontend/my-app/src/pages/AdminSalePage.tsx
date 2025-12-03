@@ -33,7 +33,7 @@ interface House {
   listing_type?: 'sale' | 'rent';
 }
 
-const API_BASE = 'http://127.0.0.1:8000/api';
+const API_BASE = 'https://caps-em1t.onrender.com/api';
 
 const AdminSalePage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);

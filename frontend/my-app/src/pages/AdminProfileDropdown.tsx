@@ -126,7 +126,7 @@ const AdminProfileDropdown: React.FC = () => {
   const profileImageUrl = profile?.profile?.profile_image 
     ? (profile.profile.profile_image.startsWith('http') 
         ? profile.profile.profile_image 
-        : `http://127.0.0.1:8000${profile.profile.profile_image}`)
+        : `https://caps-em1t.onrender.com${profile.profile.profile_image}`)
     : defaultProfile;
 
   return (

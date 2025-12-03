@@ -304,7 +304,7 @@ const MapPage: React.FC<MapPageProps> = ({ isAdmin }) => {
       return;
     }
 
-    fetch("http://127.0.0.1:8000/api/bookings/", {
+    fetch("https://caps-em1t.onrender.com/api/bookings/", {
       credentials: "include",
       headers: {
         "Authorization": `Bearer ${token}`,
