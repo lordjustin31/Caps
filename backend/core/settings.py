@@ -11,13 +11,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- Security ---
 SECRET_KEY = os.environ.get(
-    "DJANGO_SECRET_KEY", 
+    "DJANGO_SECRET_KEY",
     "django-insecure-uo-ctnd*!(!2z!^5pg$1te=zjdjem@$*58i7@ex^q51o5q#wa!"
 )
 
 DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 
-# Add your Render URL here
 ALLOWED_HOSTS = os.environ.get(
     "DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,caps-em1t.onrender.com"
 ).split(",")
@@ -44,6 +43,7 @@ INSTALLED_APPS = [
 
 # --- Middleware ---
 MIDDLEWARE = [
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Serve static files in prod
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -100,8 +100,12 @@ USE_TZ = True
 
 # --- Static & Media ---
 STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"  # For collectstatic in production
+STATICFILES_DIRS = [BASE_DIR / "static"]  # optional for local static files
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = BASE_DIR / "media"
 
 # --- REST Framework ---
 REST_FRAMEWORK = {
@@ -143,7 +147,7 @@ EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
 EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 587))
 EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "1") == "1"
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "happyphhomes@gmail.com")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "hlla ujjd bpjg dfqx")  # app password
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "hlla ujjd bpjg dfqx")  # App password
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", f"Happy Homes <{EMAIL_HOST_USER}>")
 CONTACT_INBOX_EMAIL = os.environ.get("CONTACT_INBOX_EMAIL", DEFAULT_FROM_EMAIL)
 
