@@ -17,7 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import path, include
 
 from api import views 
 from api.views import UserHistoryListView, active_visitors, api_root
@@ -37,7 +40,8 @@ urlpatterns = [
     path("api/user-history/", UserHistoryListView.as_view(), name="user-history"),
     path('api/admin/pending-verifications/', views.pending_verifications, name='pending_verifications'),
     path('api/admin/verify-user/<int:user_id>/', views.verify_user, name='verify_user'),
-    path("visitor/active/", active_visitors, name="active_visitors"),   
+    path("visitor/active/", active_visitors, name="active_visitors"),
+    path('api/', include('api.urls')),   
     
  
         # reCAPTCHA verification endpoint
