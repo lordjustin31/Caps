@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "corsheaders",
     "simple_history",
+    
 
     # Local apps
     "api",
@@ -42,9 +43,10 @@ INSTALLED_APPS = [
 
 # --- Middleware ---
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",                  
     "django.middleware.security.SecurityMiddleware",           # Security headers
     "whitenoise.middleware.WhiteNoiseMiddleware",             # Static files in production
-    "corsheaders.middleware.CorsMiddleware",                  # CORS
+    # CORS
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -133,7 +135,7 @@ SIMPLE_JWT = {
 }
 
 # --- CORS & CSRF ---
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [

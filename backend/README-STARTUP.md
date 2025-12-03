@@ -48,7 +48,7 @@ C:\Users\Patotoy\AppData\Local\Programs\Python\Python39\python.exe manage.py run
 ## After Server Starts
 
 The backend will be available at:
-- **http://localhost:8000**
+- **https://caps-em1t.onrender.com**
 - **https://caps-em1t.onrender.com**
 
 Your frontend (running on port 3000) is already configured to connect to this backend.

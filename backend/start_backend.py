@@ -45,7 +45,7 @@ except:
 # Step 3: Start server
 print("\nStep 3: Starting Django server...")
 print("="*70)
-print("Server will be available at: http://localhost:8000/")
+print("Server will be available at: https://caps-em1t.onrender.com/")
 print("Press Ctrl+C to stop the server")
 print("="*70 + "\n")
 
