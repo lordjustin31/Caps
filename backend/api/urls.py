@@ -81,7 +81,7 @@ urlpatterns = [
     path('profile/delete-billing/', delete_billing, name='delete-billing'),
     path('admin/users/<int:user_id>/update/', admin_update_user, name='admin-update-user'),
     path('admin/users/<int:user_id>/change-password/', admin_change_user_password, name='admin-change-password'),
-
+    
     
  
     # ✅ Admin user management
