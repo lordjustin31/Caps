@@ -10,7 +10,7 @@ if (window.location.hostname === "localhost" || window.location.hostname === "12
   API_URL = `http://${window.location.hostname}:8000/api`;
 } else {
   // ngrok or deployed environment
-  API_URL = "https://0ca4f2492036.ngrok-free.app/api";
+  API_URL = "https://caps-em1t.onrender.com/api";
 }
 
 export default API_URL;
