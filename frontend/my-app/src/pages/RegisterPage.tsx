@@ -42,7 +42,7 @@ const RegisterPage: React.FC = () => {
       const res = await fetch('https://caps-em1t.onrender.com/api/send_verification_email/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: email }),
       });
 
       if (res.ok) {
